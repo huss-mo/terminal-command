@@ -2,7 +2,7 @@ import json
 import platform
 import requests
 
-from config import load_config
+from src.config import load_config
 
 
 def call_llm_api(api_url: str, headers: dict, payload: dict) -> str:
@@ -30,7 +30,7 @@ def call_llm_api(api_url: str, headers: dict, payload: dict) -> str:
         })
 
 
-def build_user_prompt(user_query: str) -> str:
+def _build_user_prompt(user_query: str) -> str:
     """
     Constructs the final prompt to be sent to the LLM.
     It loads the prompt template from the configuration and appends the user's query.
@@ -65,7 +65,7 @@ def get_command_from_llm(user_query: str) -> str:
     This implementation only supports the OpenAI provider.
     
     Args:
-        user_query (str): The complete prompt to be sent to the LLM.
+        user_query (str): The user query used to generate the prompt.
 
     Returns:
         str: A JSON string with the command and explanation.
@@ -75,10 +75,12 @@ def get_command_from_llm(user_query: str) -> str:
     provider_name = config.get("default_provider", "openai")
     provider_config = config.get("providers", {}).get(provider_name, {})
 
-    if provider_name == "openai":
+    if len(provider_config) > 0:
         api_key = provider_config.get("api_key", "")
         model = provider_config.get("model", "gpt-4o-mini")
         api_url = provider_config.get("api_url", "https://api.openai.com/v1/chat/completions")
+
+        user_prompt = _build_user_prompt(user_query)
 
         headers = {
             "Content-Type": "application/json",
@@ -97,7 +99,7 @@ def get_command_from_llm(user_query: str) -> str:
                 },
                 {
                     "role": "user",
-                    "content": user_query
+                    "content": user_prompt
                 }
             ],
             "temperature": 0.0
@@ -107,7 +109,7 @@ def get_command_from_llm(user_query: str) -> str:
     else:
         return json.dumps({
             "command": "echo 'Unknown provider'",
-            "explanation": f"Provider '{provider_name}' not supported. Only OpenAI is supported."
+            "explanation": f"Provider '{provider_name}' is not configured."
         })
 
 def detect_suspicious_command(command: str) -> bool:
@@ -132,21 +134,24 @@ def detect_suspicious_command(command: str) -> bool:
     
     # Local check using configured suspicious substrings under detection_conf.
     local_substrings = detection_conf.get("suspicious_substrings", [])
+
     for substr in local_substrings:
         if substr in command: return True
 
     # Check if provider-based detection is enabled.
     provider_detection = detection_conf.get("provider_detection", {})
-    if provider_detection.get("enabled", False):
-        detection_provider = provider_detection.get("provider", "openai")
-        detection_prompt_template = provider_detection.get("prompt", "Analyze command: {command}")
-        prompt = detection_prompt_template.format(command=command)
 
-        if detection_provider == "openai":
-            provider_config = config.get("providers", {}).get("openai", {})
+    if provider_detection.get("enabled", False):
+        provider_name = provider_detection.get("provider", "openai")
+        provider_config = config.get("providers", {}).get(provider_name, {})
+        
+        if len(provider_config) > 0:
             api_key = provider_config.get("api_key", "")
             model = provider_config.get("model", "gpt-4o-mini")
             api_url = provider_config.get("api_url", "https://api.openai.com/v1/chat/completions")
+
+            detection_prompt_template = provider_detection.get("prompt_template", "Analyze command: {command}")
+            prompt = detection_prompt_template.format(command = command)
 
             headers = {
                 "Content-Type": "application/json",

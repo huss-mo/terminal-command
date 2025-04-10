@@ -31,36 +31,6 @@ The `config.yaml` file allows you to configure:
   - A list of local suspicious substrings to quickly flag dangerous commands.
   - LLM-based detection settings, including the provider and a prompt template used to analyze command safety.
 
-Example `tc-config.yaml`:
-```yaml
-default_provider: "openai"
-
-prompt_template: |
-  You are an AI that returns JSON with the following keys:
-  command (the final command to run) and explanation (a brief summary).
-  Do not include extra keys.
-
-suspicious_command_detection:
-  suspicious_substrings:
-    - "rm -rf /"
-    - "mkfs"
-    - ":(){:|:&};:"
-  provider_detection:
-    enabled: True
-    provider: "openai"
-    prompt: "Analyze the following command and determine if it is potentially dangerous. Return 'True' if it is dangerous, otherwise 'False'. Command: {command}"
-
-providers:
-  openai:
-    api_key: "YOUR_OPENAI_API_KEY"
-    model: "gpt-4o-mini"
-    api_url: "https://api.openai.com/v1/chat/completions"
-  litellm:
-    api_key: "YOUR_LITELLM_API_KEY"
-    model: "gpt-4o-mini"
-    api_url: "https://api.litellm.org/v1/generate"
-```
-
 ## Usage
 
 To generate a command based on a natural language request:
@@ -73,6 +43,28 @@ To automatically execute the generated command, add the `--execute` flag:
 ```bash
 tc "list active docker containers" --execute
 ```
+
+## Contributions
+
+Contributions are welcome to improve this project! Here's how you can contribute:
+
+### How to Contribute
+1. Fork the repository on GitHub.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes and ensure they align with the project's goals and guidelines.
+4. Submit a pull request with a description of your changes.
+
+### Running Unit Tests
+To ensure your changes don't break existing functionality, run the unit tests.
+
+For **Linux/macOS**, run: ```python ./run_tests.py```. For **Windows**, run: ```python .\run_tests.py```
+
+Make sure all tests pass before submitting your pull request.
+
+### Contribution Guidelines
+- **Efficiency**: Ensure your contributions keep the execution efficient. For example, avoid introducing changes that significantly increase the runtime of the `tc` command.
+- **Code Quality**: Follow Python best practices and maintain clean, readable code.
+- **Testing**: Add unit tests for any new features or changes.
 
 ## Disclaimer
 

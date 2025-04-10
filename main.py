@@ -3,7 +3,7 @@ import json
 import subprocess
 import sys
 
-from llm_api import get_command_from_llm, detect_suspicious_command, build_user_prompt
+from src.llm_api import get_command_from_llm, detect_suspicious_command
 
 
 def main():
@@ -31,8 +31,7 @@ def main():
 
     # Get command from LLM
     user_query = " ".join(args.query)
-    user_prompt = build_user_prompt(user_query)
-    llm_response = get_command_from_llm(user_prompt)
+    llm_response = get_command_from_llm(user_query)
 
     # Check validity
     try:

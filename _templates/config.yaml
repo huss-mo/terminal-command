@@ -17,7 +17,7 @@ suspicious_command_detection:
   provider_detection:
     enabled: False
     provider: "openai"
-    prompt: "Analyze the following terminal command and determine if it is potentially dangerous. Return 'True' if it is dangerous, otherwise 'False'. Command: {command}"
+    prompt_template: "Analyze the following terminal command and determine if it is potentially dangerous. Return 'True' if it is dangerous, otherwise 'False'. Command: {command}"
 
 providers:
   openai:
