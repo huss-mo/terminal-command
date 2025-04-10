@@ -5,19 +5,19 @@
 default_provider: "openai"
 
 prompt_template: |
-  You are an AI that returns JSON with the following keys:
-  command (the final command to run) and explanation (a brief summary).
-  Do not include extra keys.
+  Generate a terminal command to accomplish the following user request on the given operating system
+  User Request: {user_query}
+  Operating System: {os}
 
 suspicious_command_detection:
   suspicious_substrings:
-    - "rm -rf /"
-    - "mkfs"
-    - ":(){:|:&};:"
+    - "rm -rf /"    # Recursive delete command
+    - "mkfs"        # Filesystem creation command
+    - ":(){:|:&};:" # Bash fork bomb
   provider_detection:
     enabled: False
     provider: "openai"
-    prompt: "Analyze the following command and determine if it is potentially dangerous. Return 'True' if it is dangerous, otherwise 'False'. Command: {command}"
+    prompt: "Analyze the following terminal command and determine if it is potentially dangerous. Return 'True' if it is dangerous, otherwise 'False'. Command: {command}"
 
 providers:
   openai:

@@ -3,7 +3,7 @@ import json
 import subprocess
 import sys
 
-from llm_api import get_command_from_llm, detect_suspicious_command, build_final_prompt
+from llm_api import get_command_from_llm, detect_suspicious_command, build_user_prompt
 
 
 def main():
@@ -17,7 +17,7 @@ def main():
         description="terminal-command (tc): A CLI tool that suggests and executes shell commands using AI"
     )
     parser.add_argument(
-        "prompt",
+        "query",
         type=str,
         nargs="+",
         help="The natural language description of what you want to do."
@@ -29,11 +29,12 @@ def main():
     )
     args = parser.parse_args()
 
-    user_query = " ".join(args.prompt)
-    final_prompt = build_final_prompt(user_query)
+    # Get command from LLM
+    user_query = " ".join(args.query)
+    user_prompt = build_user_prompt(user_query)
+    llm_response = get_command_from_llm(user_prompt)
 
-    llm_response = get_command_from_llm(final_prompt)
-
+    # Check validity
     try:
         data = json.loads(llm_response)
         command = data.get("command", "")
@@ -63,6 +64,7 @@ def main():
         except subprocess.CalledProcessError as e: print(f"Command failed: {e}", file=sys.stderr)
     else:
         print("Use the --execute (-e) option to run this command automatically.", file=sys.stderr)
+
 
 if __name__ == "__main__":
     main()

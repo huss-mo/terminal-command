@@ -1,4 +1,5 @@
 import json
+import platform
 import requests
 
 from config import load_config
@@ -29,7 +30,7 @@ def call_llm_api(api_url: str, headers: dict, payload: dict) -> str:
         })
 
 
-def build_final_prompt(user_query: str) -> str:
+def build_user_prompt(user_query: str) -> str:
     """
     Constructs the final prompt to be sent to the LLM.
     It loads the prompt template from the configuration and appends the user's query.
@@ -42,10 +43,16 @@ def build_final_prompt(user_query: str) -> str:
     """
 
     config = load_config()
-    prompt_template = config.get("prompt_template", "")
-    final_prompt = f"{prompt_template}\nUserRequest: {user_query}\n"
 
-    return final_prompt
+    prompt_template = config.get("prompt_template", "")
+    os = platform.system()
+    
+    user_prompt = prompt_template.format(
+        user_query = user_query,
+        os = os
+    )
+
+    return user_prompt
 
 def get_command_from_llm(user_query: str) -> str:
     """
