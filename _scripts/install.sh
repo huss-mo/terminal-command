@@ -36,7 +36,7 @@ echo "Installing dependencies from requirements.txt..."
 
 # Create a small wrapper script 'tc' that points to the Python entry point
 WRAPPER_SCRIPT="#!/usr/bin/env bash
-\"${PROJECT_ROOT}/env/bin/python\" \"${PROJECT_ROOT}/src/main.py\" \"\$@\"
+\"${PROJECT_ROOT}/env/bin/python\" \"${PROJECT_ROOT}/main.py\" \"\$@\"
 "
 
 # Write wrapper script to a temporary location, then move to /usr/local/bin

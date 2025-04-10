@@ -4,9 +4,7 @@
 
 Write-Host "Installing terminal-command (tc) on Windows..."
 
-param(
-    [string]$InstallDir = "C:\\Windows\\System32"  # default location
-)
+$InstallDir = "C:\\Windows\\System32"  # default location
 
 # Check if the user has administrative privileges
 if (-not ([bool](Test-Path $InstallDir))) {
@@ -15,8 +13,8 @@ if (-not ([bool](Test-Path $InstallDir))) {
 }
 
 # Check if Python is installed and in PATH
-if (-not (Get-Command python -ErrorAction SilentlyContinue)) {
-    Write-Error "Error: Python is not found or not in PATH. Please install Python 3 and ensure it is added to PATH."
+if (-not (Get-Command python3 -ErrorAction SilentlyContinue)) {
+    Write-Error "Error: python3 is not found or not in PATH. Please install Python 3 and ensure it is added to PATH."
     exit 1
 }
 
@@ -24,9 +22,10 @@ if (-not (Get-Command python -ErrorAction SilentlyContinue)) {
 $ScriptDir = Split-Path $MyInvocation.MyCommand.Definition -Parent
 $ProjectRoot = Join-Path $ScriptDir ".."
 $EnvDir = Join-Path $ProjectRoot "env"
+
 if (-not (Test-Path $EnvDir)) {
     Write-Host "Creating virtual environment in $EnvDir..."
-    python -m venv $EnvDir
+    python3 -m venv $EnvDir
 }
 
 # Install dependencies
@@ -40,7 +39,7 @@ Write-Host "ProjectRoot: $ProjectRoot"
 # Generate the tc.cmd script
 $WrapperScript = @"
 @echo off
-"$EnvDir\Scripts\python" "$ProjectRoot\src\main.py" %*
+"$EnvDir\Scripts\python" "$ProjectRoot\main.py" %*
 "@
 
 # Create a temp file, set contents
@@ -53,4 +52,4 @@ Copy-Item $TempFile -Destination (Join-Path $InstallDir "tc.cmd") -Force
 Remove-Item $TempFile -Force
 
 
-Write-Host "Usage: tc \"list active docker containers\""
+Write-Host 'Usage: tc "list active docker containers"'
