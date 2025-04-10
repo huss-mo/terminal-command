@@ -10,6 +10,17 @@ PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 echo "Installing terminal-command (tc) on Linux/macOS..."
 
+# Create virtual environment
+ENV_DIR="${PROJECT_ROOT}/env"
+if [ ! -d "${ENV_DIR}" ]; then
+    echo "Creating virtual environment in ${ENV_DIR}..."
+    python3 -m venv "${ENV_DIR}"
+fi
+
+# Install dependencies
+echo "Installing dependencies from requirements.txt..."
+"${ENV_DIR}/bin/pip" install -r "${PROJECT_ROOT}/requirements.txt"
+
 # Check if Python is available
 if ! command -v python3 &> /dev/null; then
     echo "Error: python3 not found. Please install Python 3 and re-run this script."
@@ -26,7 +37,7 @@ fi
 
 # Create a small wrapper script 'tc' that points to the Python entry point
 WRAPPER_SCRIPT="#!/usr/bin/env bash
-python3 \"${PROJECT_ROOT}/src/main.py\" \"\$@\"
+\"${PROJECT_ROOT}/env/bin/python\" \"${PROJECT_ROOT}/src/main.py\" \"\$@\"
 "
 
 # Write wrapper script to a temporary location, then move to /usr/local/bin

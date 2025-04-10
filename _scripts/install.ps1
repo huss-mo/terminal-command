@@ -13,6 +13,17 @@ if (-not (Get-Command python | Out-Null)) {
     exit 1
 }
 
+# Create virtual environment
+$EnvDir = Join-Path $ProjectRoot "env"
+if (-not (Test-Path $EnvDir)) {
+    Write-Host "Creating virtual environment in $EnvDir..."
+    python -m venv $EnvDir
+}
+
+# Install dependencies
+Write-Host "Installing dependencies from requirements.txt..."
+& "$EnvDir\Scripts\pip" install -r "$ProjectRoot\requirements.txt"
+
 $ScriptDir = Split-Path $MyInvocation.MyCommand.Definition -Parent
 $ProjectRoot = Join-Path $ScriptDir ".."
 Write-Host "ProjectRoot: $ProjectRoot"
@@ -20,7 +31,7 @@ Write-Host "ProjectRoot: $ProjectRoot"
 # Generate the wc.cmd script
 $WrapperScript = @"
 @echo off
-python "$ProjectRoot\src\main.py" %*
+"$EnvDir\Scripts\python" "$ProjectRoot\src\main.py" %*
 "@
 
 # Create a temp file, set contents
