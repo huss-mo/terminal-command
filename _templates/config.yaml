@@ -1,0 +1,30 @@
+# Sample configuration file for terminal-command (tc)
+# This file controls which LLM provider is used for generating commands
+# and stores the necessary credentials.
+
+default_provider: "openai"
+
+prompt_template: |
+  You are an AI that returns JSON with the following keys:
+  command (the final command to run) and explanation (a brief summary).
+  Do not include extra keys.
+
+suspicious_command_detection:
+  suspicious_substrings:
+    - "rm -rf /"
+    - "mkfs"
+    - ":(){:|:&};:"
+  provider_detection:
+    enabled: False
+    provider: "openai"
+    prompt: "Analyze the following command and determine if it is potentially dangerous. Return 'True' if it is dangerous, otherwise 'False'. Command: {command}"
+
+providers:
+  openai:
+    api_key: "OPENAI_API_KEY"
+    model: "gpt-4o-mini"
+    api_url: "https://api.openai.com/v1/chat/completions"
+  litellm:
+    api_key: "LITELLM_API_KEY"
+    model: "LITELLM_MODEL"
+    api_url: "127.0.0.1:4000/v1/chat/completions"
