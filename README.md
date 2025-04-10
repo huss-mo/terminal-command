@@ -2,12 +2,16 @@
 
 > _Your everyday terminal command builder (powered by AI)_
 
-A Python-based CLI tool named "tc" for generating and executing shell commands using an LLM. This project supports:
+Instead of searching Stack Overflow or man pages for the right command syntax, _tc_ uses AI to build complex terminal commands from plain English
+
+_tc_ is a Python-based CLI tool for generating, and optionally executing, shell commands using an LLM. This project stemmed from challenges faced during my work and research, where using multiple cli-based tools required frequent searching for the correct command syntax.
+
+The project supports:
 
 - **LLM Integration**: It queries the configured LLM provider (e.g., OpenAI or LiteLLM) to generate terminal commands based on natural language input.
 - **Configurable Endpoints and Models**: Endpoints are configurable via `config.yaml`. OpenAI-like endpoints are supported (ex. LiteLLM)
 - **Suspicious Command Detection**: Utilizes both local substring checks and an LLM-based detection method to flag potentially dangerous commands. The list of suspicious substrings and the LLM detection prompt are configurable in `config.yaml`.
-- **Command Execution**: The tool can either print the generated command or execute it automatically using the `--execute` (or `-e`) flag.
+- **Optional Command Execution**: The tool can either print the generated command or execute it automatically using the `--execute` (or `-e`) flag.
 
 ## Installation
 
@@ -32,6 +36,8 @@ The `config.yaml` file allows you to configure:
 - **Suspicious Command Detection**: 
   - A list of local suspicious substrings to quickly flag dangerous commands.
   - LLM-based detection settings, including the provider and a prompt template used to analyze command safety.
+
+For detailed configuration options, see [CONFIG_DOC.md](_docs/CONFIG_DOC.md).
 
 ## Usage
 
