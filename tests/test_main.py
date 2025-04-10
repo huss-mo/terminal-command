@@ -3,13 +3,15 @@ import unittest
 
 from main import main
 from unittest.mock import patch, MagicMock
+from src.config import load_config
 
 
 class TestMain(unittest.TestCase):
+    @patch('main.print')
     @patch('main.subprocess.run')
     @patch('main.get_command_from_llm')
     @patch('main.detect_suspicious_command')
-    def test_main_execution(self, mock_detect_suspicious, mock_get_command, mock_subprocess):
+    def test_main_execution(self, mock_detect_suspicious, mock_get_command, mock_subprocess, mock_print):
         # Mock the functions to simulate the expected behavior
         mock_get_command.return_value = '{"command": "echo Hello", "explanation": "Prints Hello"}'
         mock_detect_suspicious.return_value = False
@@ -39,7 +41,7 @@ class TestMain(unittest.TestCase):
         # Verify that the functions were called with the expected arguments
         mock_get_command.assert_called_once_with("print hello")
         mock_detect_suspicious.assert_called_once_with("echo Hello")
-        mock_print.assert_any_call("WARNING: The command is detected as potentially dangerous.", file=sys.stderr)
+        mock_print.assert_any_call("Command (suspicious): echo Hello", file = sys.stderr)
 
 if __name__ == '__main__':
     unittest.main()
