@@ -5,10 +5,23 @@
 
 set -e
 
+echo "Installing terminal-command (tc) on Linux/macOS..."
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+INSTALL_DIR="/usr/local/bin"
 
-echo "Installing terminal-command (tc) on Linux/macOS..."
+# Ensure script is run with root privileges
+if [ "$EUID" -ne 0 ]; then
+    echo "Error: This script must be run as root. Attempting to install to ${INSTALL_DIR} may fail. Please re-run with sudo or as root."
+    exit 1
+fi
+
+# Check if Python is available
+if ! command -v python3 &> /dev/null; then
+    echo "Error: python3 not found or not in PATH. Please install Python 3 and ensure it is added to PATH."
+    exit 1
+fi
 
 # Create virtual environment
 ENV_DIR="${PROJECT_ROOT}/env"
@@ -20,20 +33,6 @@ fi
 # Install dependencies
 echo "Installing dependencies from requirements.txt..."
 "${ENV_DIR}/bin/pip" install -r "${PROJECT_ROOT}/requirements.txt"
-
-# Check if Python is available
-if ! command -v python3 &> /dev/null; then
-    echo "Error: python3 not found. Please install Python 3 and re-run this script."
-    exit 1
-fi
-
-# Ensure script is run with root privileges, or supply a custom install location
-INSTALL_DIR="/usr/local/bin"
-if [ "$EUID" -ne 0 ]; then
-    echo "Warning: Script not running as root. Attempting to install to ${INSTALL_DIR} may fail."
-    echo "Press Ctrl+C to cancel, or Enter to continue as non-root."
-    read
-fi
 
 # Create a small wrapper script 'tc' that points to the Python entry point
 WRAPPER_SCRIPT="#!/usr/bin/env bash

@@ -2,18 +2,27 @@
 # This script installs the 'tc' command on Windows by copying a small wrapper script (tc.cmd)
 # into a directory that should be on the user's PATH.
 
+Write-Host "Installing terminal-command (tc) on Windows..."
+
 param(
     [string]$InstallDir = "C:\\Windows\\System32"  # default location
 )
 
-Write-Host "Installing terminal-command (tc) on Windows..."
+# Check if the user has administrative privileges
+if (-not ([bool](Test-Path $InstallDir))) {
+    Write-Error "Error: InstallDir does not exist or is inaccessible. Please ensure you have administrative privileges."
+    exit 1
+}
 
-if (-not (Get-Command python | Out-Null)) {
-    Write-Error "Error: Python is not found. Please install Python 3 and re-run this script."
+# Check if Python is installed and in PATH
+if (-not (Get-Command python -ErrorAction SilentlyContinue)) {
+    Write-Error "Error: Python is not found or not in PATH. Please install Python 3 and ensure it is added to PATH."
     exit 1
 }
 
 # Create virtual environment
+$ScriptDir = Split-Path $MyInvocation.MyCommand.Definition -Parent
+$ProjectRoot = Join-Path $ScriptDir ".."
 $EnvDir = Join-Path $ProjectRoot "env"
 if (-not (Test-Path $EnvDir)) {
     Write-Host "Creating virtual environment in $EnvDir..."
@@ -41,9 +50,7 @@ Set-Content -Path $TempFile -Value $WrapperScript -Force
 # (On Windows, .cmd files don't usually need explicit chmod, but let's keep it consistent.)
 # Copy to InstallDir
 Copy-Item $TempFile -Destination (Join-Path $InstallDir "tc.cmd") -Force
+Remove-Item $TempFile -Force
 
-Write-Host "Installation complete! 'tc' is now available in $InstallDir as tc.cmd."
+
 Write-Host "Usage: tc \"list active docker containers\""
-
-# Optionally remind user to ensure $InstallDir is in PATH
-Write-Host "`nNote: Make sure $InstallDir is in your PATH environment variable."
