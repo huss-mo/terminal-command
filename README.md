@@ -1,4 +1,6 @@
-# terminal-command
+# terminal-command (tc)
+
+> _Your everyday terminal command builder (powered by AI)_
 
 A Python-based CLI tool named "tc" for generating and executing shell commands using an LLM. This project supports:
 
