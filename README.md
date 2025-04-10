@@ -1,10 +1,12 @@
+<img src="./_assets/icon.png" alt="tc logo" width="140"> 
+
 # terminal-command (tc)
 
 > _Your everyday terminal command builder (powered by AI)_
 
-Instead of searching Stack Overflow or man pages for the right command syntax, _tc_ uses AI to build complex terminal commands from plain English
+Instead of searching Stack Overflow or man pages for the right command syntax, `tc` uses AI to build complex terminal commands from plain English
 
-_tc_ is a Python-based CLI tool for generating, and optionally executing, shell commands using an LLM. This project stemmed from challenges faced during my work and research, where using multiple cli-based tools required frequent searching for the correct command syntax.
+`tc` is a Python-based CLI tool for generating, and optionally executing, shell commands using an LLM. This project stemmed from challenges faced during my work and research, where using multiple cli-based tools required frequent searching for the correct command syntax.
 
 The project supports:
 
@@ -25,7 +27,12 @@ chmod +x ./_scripts/install.sh
 
 For **Windows**, run:
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts/install.ps1
+powershell -ExecutionPolicy Bypass -File _scripts/install.ps1
+```
+
+You can also run the main script directly after activating a virtual env with the required dependencies:
+```bash
+python ./main.py "list active docker containers"
 ```
 
 ## Configuration
@@ -47,9 +54,9 @@ tc "list active docker containers"
 ```
 This prints the proposed command and explanation to the terminal.
 
-To automatically execute the generated command, add the `--execute` flag:
+To automatically execute the generated command, add the `-e` flag:
 ```bash
-tc "list active docker containers" --execute
+tc "list active docker containers" -e
 ```
 
 ## Contributions
@@ -65,7 +72,9 @@ Contributions are welcome to improve this project! Here's how you can contribute
 ### Running Unit Tests
 To ensure your changes don't break existing functionality, run the unit tests.
 
-For **Linux/macOS**, run: ```python ./run_tests.py```. For **Windows**, run: ```python .\run_tests.py```
+```bash
+python ./run_tests.py
+```
 
 Make sure all tests pass before submitting your pull request.
 

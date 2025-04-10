@@ -37,7 +37,7 @@ $ScriptDir = Split-Path $MyInvocation.MyCommand.Definition -Parent
 $ProjectRoot = Join-Path $ScriptDir ".."
 Write-Host "ProjectRoot: $ProjectRoot"
 
-# Generate the wc.cmd script
+# Generate the tc.cmd script
 $WrapperScript = @"
 @echo off
 "$EnvDir\Scripts\python" "$ProjectRoot\src\main.py" %*
