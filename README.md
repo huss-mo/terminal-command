@@ -69,3 +69,7 @@ Make sure all tests pass before submitting your pull request.
 ## Disclaimer
 
 This is an AI-powered tool. Use it at your own risk. The developer is not responsible for any consequences.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
