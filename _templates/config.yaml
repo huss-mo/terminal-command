@@ -6,7 +6,7 @@ default_provider: "openai"
 verbosity: 2        # 0: no output, 1: command only, 2: all output
 
 prompt_template: |
-  Generate a terminal command to accomplish the following user request on the given operating system
+  Generate a one-line terminal command to accomplish the following user request on the given operating system
   User Request: {user_query}
   Operating System: {os}
 
