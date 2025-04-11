@@ -6,7 +6,7 @@
 
 Instead of searching Stack Overflow or man pages for the right command syntax, `tc` uses AI to build complex terminal commands from plain English
 
-`tc` is a Python-based CLI tool for generating, and optionally executing, shell commands using an LLM. This project stemmed from challenges faced during my work and research, where using multiple cli-based tools required frequent searching for the correct command syntax.
+`tc` is a Python-based CLI tool for generating, and optionally executing, shell commands using an LLM. This project stemmed from challenges faced during work and research, where using multiple cli-based tools required frequent searching for the correct command syntax.
 
 The project supports:
 
@@ -14,6 +14,10 @@ The project supports:
 - **Configurable Endpoints and Models**: Endpoints are configurable via `config.yaml`. OpenAI-like endpoints are supported (ex. LiteLLM)
 - **Suspicious Command Detection**: Utilizes both local substring checks and an LLM-based detection method to flag potentially dangerous commands. The list of suspicious substrings and the LLM detection prompt are configurable in `config.yaml`.
 - **Optional Command Execution**: The tool can either print the generated command or execute it automatically using the `--execute` (or `-e`) flag.
+
+## Demo
+
+<img src="./_assets/example.gif" alt="tc command demonstration" width="760"> 
 
 ## Installation
 
@@ -28,11 +32,6 @@ chmod +x ./_scripts/install.sh
 For **Windows**, run:
 ```powershell
 powershell -ExecutionPolicy Bypass -File _scripts/install.ps1
-```
-
-You can also run the main script directly after activating a virtual env with the required dependencies:
-```bash
-python ./main.py "list active docker containers"
 ```
 
 ## Configuration
@@ -50,13 +49,13 @@ For detailed configuration options, see [CONFIG_DOC.md](_docs/CONFIG_DOC.md).
 
 To generate a command based on a natural language request:
 ```bash
-tc "list active docker containers"
+tc "list running docker containers"
 ```
 This prints the proposed command and explanation to the terminal.
 
 To automatically execute the generated command, add the `-e` flag:
 ```bash
-tc "list active docker containers" -e
+tc "list running docker containers" -e
 ```
 
 ## Contributions
