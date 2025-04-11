@@ -21,6 +21,8 @@ The project supports:
 
 ## Installation
 
+**Requires:** Python 3.9+.
+
 For **Linux/macOS**, run:
 ```bash
 chmod +x ./_scripts/install.sh
