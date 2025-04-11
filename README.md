@@ -13,15 +13,13 @@ The project supports:
 - **LLM Integration**: It queries the configured LLM provider (e.g., OpenAI or LiteLLM) to generate terminal commands based on natural language input.
 - **Configurable Endpoints and Models**: Endpoints are configurable via `config.yaml`. OpenAI-like endpoints are supported (ex. LiteLLM)
 - **Suspicious Command Detection**: Utilizes both local substring checks and an LLM-based detection method to flag potentially dangerous commands. The list of suspicious substrings and the LLM detection prompt are configurable in `config.yaml`.
-- **Optional Command Execution**: The tool can either print the generated command or execute it automatically using the `--execute` (or `-e`) flag.
+- **Optional Command Execution**: The tool can either print the generated command or execute it automatically using the `--execute` (or `-e`) flag (Suspicious commands are not automatically executed even with the -e flag).
 
 ## Demo
 
 <img src="./_assets/example.gif" alt="tc command demonstration" width="760"> 
 
 ## Installation
-
-First, copy config.yaml from _templates directory to the root directory of the project and set the API key for the required provider. Then:
 
 For **Linux/macOS**, run:
 ```bash
@@ -34,16 +32,7 @@ For **Windows**, run:
 powershell -ExecutionPolicy Bypass -File _scripts/install.ps1
 ```
 
-## Configuration
-
-The `config.yaml` file allows you to configure:
-- **Default LLM Provider and Endpoints**: Configure the default provider (e.g., "openai" or "litellm"), API endpoints, and credentials.
-- **Prompt Template**: A template to guide the LLM in producing structured JSON output containing `command` and `explanation`.
-- **Suspicious Command Detection**: 
-  - A list of local suspicious substrings to quickly flag dangerous commands.
-  - LLM-based detection settings, including the provider and a prompt template used to analyze command safety.
-
-For detailed configuration options, see [CONFIG_DOC.md](_docs/CONFIG_DOC.md).
+Then, Set the API key for the LLM provider in config.yaml (Automatically copied from _templates during installation). 
 
 ## Usage
 
@@ -58,9 +47,20 @@ To automatically execute the generated command, add the `-e` flag:
 tc "list running docker containers" -e
 ```
 
+## Further Configuration
+
+The `config.yaml` file allows you to configure:
+- **Default LLM Provider and Endpoints**: Configure the default provider (e.g., "openai" or "litellm"), API endpoints, and credentials.
+- **Prompt Template**: A template to guide the LLM in producing structured JSON output containing `command` and `explanation`.
+- **Suspicious Command Detection**: 
+  - A list of local suspicious substrings to quickly flag dangerous commands.
+  - LLM-based detection settings, including the provider and a prompt template used to analyze command safety.
+
+For detailed configuration options, see [CONFIG_DOC.md](_docs/CONFIG_DOC.md).
+
 ## Contributions
 
-Contributions are welcome to improve this project! Here's how you can contribute:
+Contributions are welcome to improve this project
 
 ### How to Contribute
 1. Fork the repository on GitHub.

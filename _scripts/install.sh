@@ -32,7 +32,9 @@ fi
 
 # Install dependencies
 echo "Installing dependencies from requirements.txt..."
+echo ""
 "${ENV_DIR}/bin/pip" install -r "${PROJECT_ROOT}/requirements.txt"
+echo ""
 
 # Create a small wrapper script 'tc' that points to the Python entry point
 WRAPPER_SCRIPT="#!/usr/bin/env bash
@@ -47,5 +49,16 @@ chmod 755 "${TMP_WRAPPER}"
 # Move the wrapper script to INSTALL_DIR
 sudo mv "${TMP_WRAPPER}" "${INSTALL_DIR}/tc"
 
-echo "Installation complete! 'tc' is now available in ${INSTALL_DIR}."
-echo "Usage: tc \"list active docker containers\""
+# Check if config.yaml exists in the project's root directory
+CONFIG_FILE="${PROJECT_ROOT}/config.yaml"
+TEMPLATE_CONFIG_FILE="${PROJECT_ROOT}/_templates/config.yaml"
+
+if [ ! -f "${CONFIG_FILE}" ]; then
+    cp "${TEMPLATE_CONFIG_FILE}" "${CONFIG_FILE}"
+    echo "config.yaml is copied from the templates to the project's root directory. Please add you LLM provider API key to it."
+else
+    echo "config.yaml already exists in the project's root directory. Skipping copy."
+fi
+
+echo "Installation complete. 'tc' is now available in ${INSTALL_DIR}."
+echo "For help: tc -h"

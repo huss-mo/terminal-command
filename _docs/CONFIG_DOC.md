@@ -5,10 +5,10 @@ This document provides details about the parameters in `config.yaml`, which cont
 ## Parameters
 
 ### `default_provider`
-- **Description**: Specifies the default LLM provider to use.
+- **Description**: Specifies the LLM provider to use when generating commands.
 - **Type**: String
 - **Default**: `"openai"`
-- **Valid Values**: `"openai"`, `"litellm"`
+- **Valid Values**: Any provider defined in the `providers` section
 - **Example**: `default_provider: "openai"`
 
 ### `verbosity`
@@ -19,7 +19,7 @@ This document provides details about the parameters in `config.yaml`, which cont
 - **Example**: `verbosity: 1`
 
 ### `prompt_template`
-- **Description**: Template for generating terminal commands based on user requests.
+- **Description**: Template for generating terminal commands based on user requests. It must contain the two placeholders _{user_query}_ and _{os}_
 - **Type**: Multiline String
 - **Example**:
   ```yaml
@@ -27,32 +27,6 @@ This document provides details about the parameters in `config.yaml`, which cont
     Generate a terminal command to accomplish the following user request on the given operating system
     User Request: {user_query}
     Operating System: {os}
-  ```
-
-### `suspicious_command_detection`
-#### `suspicious_substrings`
-- **Description**: List of substrings considered suspicious in terminal commands.
-- **Type**: List of Strings
-- **Example**:
-  ```yaml
-  suspicious_substrings:
-    - "rm -rf /"
-    - "mkfs"
-    - ":(){:|:&};:"
-  ```
-
-#### `provider_detection`
-- **Description**: Configuration for detecting suspicious commands using an LLM provider.
-- **Type**: Object
-  - **`enabled`**: Boolean (Default: `False`)
-  - **`provider`**: String (Default: `"openai"`)
-  - **`prompt_template`**: Multiline String
-- **Example**:
-  ```yaml
-  provider_detection:
-    enabled: True
-    provider: "openai"
-    prompt_template: "Analyze the following terminal command and determine if it is potentially dangerous. Return 'True' if it is dangerous, otherwise 'False'. Command: {command}"
   ```
 
 ### `providers`
@@ -82,4 +56,30 @@ This document provides details about the parameters in `config.yaml`, which cont
     api_key: "LITELLM_API_KEY"
     model: "LITELLM_MODEL"
     api_url: "127.0.0.1:4000/v1/chat/completions"
+  ```
+
+### `suspicious_command_detection`
+#### `suspicious_substrings`
+- **Description**: List of substrings considered suspicious in terminal commands.
+- **Type**: List of Strings
+- **Example**:
+  ```yaml
+  suspicious_substrings:
+    - "rm -rf /"
+    - "mkfs"
+    - ":(){:|:&};:"
+  ```
+
+#### `provider_detection`
+- **Description**: Configuration for detecting suspicious commands using an LLM provider.
+- **Type**: Object
+  - **`enabled`**: Boolean (Default: `False`)
+  - **`provider`**: String (Default: `"openai"`)
+  - **`prompt_template`**: Multiline String. It must contain the placeholder _{command}_
+- **Example**:
+  ```yaml
+  provider_detection:
+    enabled: True
+    provider: "openai"
+    prompt_template: "Analyze the following terminal command and determine if it is potentially dangerous. Return 'True' if it is dangerous, otherwise 'False'. Command: {command}"
   ```

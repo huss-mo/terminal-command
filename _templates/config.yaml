@@ -1,4 +1,4 @@
-# Sample configuration file for terminal-command (tc)
+# Configuration file for terminal-command (tc)
 # This file controls which LLM provider is used for generating commands
 # and stores the necessary credentials.
 
@@ -10,16 +10,6 @@ prompt_template: |
   User Request: {user_query}
   Operating System: {os}
 
-suspicious_command_detection:
-  suspicious_substrings:
-    - "rm -rf /"    # Recursive delete command
-    - "mkfs"        # Filesystem creation command
-    - ":(){:|:&};:" # Bash fork bomb
-  provider_detection:
-    enabled: False
-    provider: "openai"
-    prompt_template: "Analyze the following terminal command and determine if it is potentially dangerous. Return 'True' if it is dangerous, otherwise 'False'. Command: {command}"
-
 providers:
   openai:
     api_key: "OPENAI_API_KEY"
@@ -29,3 +19,13 @@ providers:
     api_key: "LITELLM_API_KEY"
     model: "LITELLM_MODEL"
     api_url: "127.0.0.1:4000/v1/chat/completions"
+
+suspicious_command_detection:
+  suspicious_substrings:
+    - "rm -rf /"    # Recursive delete command
+    - "mkfs"        # Filesystem creation command
+    - ":(){:|:&};:" # Bash fork bomb
+  provider_detection:
+    enabled: False
+    provider: "openai"
+    prompt_template: "Analyze the following terminal command and determine if it is potentially dangerous. Return 'True' if it is dangerous, otherwise 'False'. Command: {command}"

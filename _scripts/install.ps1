@@ -30,11 +30,12 @@ if (-not (Test-Path $EnvDir)) {
 
 # Install dependencies
 Write-Host "Installing dependencies from requirements.txt..."
+Write-Host ""
 & "$EnvDir\Scripts\pip" install -r "$ProjectRoot\requirements.txt"
+Write-Host ""
 
 $ScriptDir = Split-Path $MyInvocation.MyCommand.Definition -Parent
 $ProjectRoot = Join-Path $ScriptDir ".."
-Write-Host "ProjectRoot: $ProjectRoot"
 
 # Generate the tc.cmd script
 $WrapperScript = @"
@@ -51,5 +52,16 @@ Set-Content -Path $TempFile -Value $WrapperScript -Force
 Copy-Item $TempFile -Destination (Join-Path $InstallDir "tc.cmd") -Force
 Remove-Item $TempFile -Force
 
+# Check if config.yaml exists in the project's root directory
+$ConfigFile = Join-Path $ProjectRoot "config.yaml"
+$TemplateConfigFile = Join-Path $ProjectRoot "_templates\config.yaml"
 
-Write-Host 'Usage: tc "list active docker containers"'
+if (-not (Test-Path $ConfigFile)) {
+    Copy-Item $TemplateConfigFile -Destination $ConfigFile -Force
+    Write-Host "config.yaml is copied from the templates to the project's root directory. Please add you LLM provider API key to it."
+} else {
+    Write-Host "config.yaml already exists in the project's root directory. Skipping copy."
+}
+
+Write-Host 'Installation complete.'
+Write-Host 'For help: tc -h'
