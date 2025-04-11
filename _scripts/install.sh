@@ -1,6 +1,6 @@
 #!/bin/bash
 # terminal-command Install Script (Linux/macOS)
-# This script installs the 'tc' command to /usr/local/bin (or a user-specified directory).
+# This script installs the 'tc' command to /usr/local/bin
 # Usage: ./install.sh
 
 set -e
@@ -39,10 +39,10 @@ WRAPPER_SCRIPT="#!/usr/bin/env bash
 \"${PROJECT_ROOT}/env/bin/python\" \"${PROJECT_ROOT}/main.py\" \"\$@\"
 "
 
-# Write wrapper script to a temporary location, then move to /usr/local/bin
+# Write wrapper script to a temporary location (And make it executable without root privilege), then move to /usr/local/bin
 TMP_WRAPPER="$(mktemp)"
 echo "${WRAPPER_SCRIPT}" > "${TMP_WRAPPER}"
-chmod +x "${TMP_WRAPPER}"
+chmod 755 "${TMP_WRAPPER}"
 
 # Move the wrapper script to INSTALL_DIR
 sudo mv "${TMP_WRAPPER}" "${INSTALL_DIR}/tc"

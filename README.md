@@ -17,7 +17,7 @@ The project supports:
 
 ## Installation
 
-First, copy config.yaml from _templates directory to the projects root directory and set the API keys. Then:
+First, copy config.yaml from _templates directory to the root directory of the project and set the API key for the required provider. Then:
 
 For **Linux/macOS**, run:
 ```bash
