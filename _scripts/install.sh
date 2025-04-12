@@ -17,6 +17,16 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
+# Check if 'tc' already exists in the INSTALL_DIR
+if [ -f "${INSTALL_DIR}/tc" ]; then
+    echo "A file named 'tc' already exists in the target directory (${INSTALL_DIR}/tc). This could be a previous version of this tool or another program entirely."
+    read -p "Do you want to replace the existing file? [y/n] " response
+    if [ "${response}" != "y" ]; then
+        echo "Installation aborted. To proceed, please remove or rename the existing '${INSTALL_DIR}/tc' and run the installer again, or consider installing manually to a different location."
+        exit 1
+    fi
+fi
+
 # Check if Python is available
 if ! command -v python3 &> /dev/null; then
     echo "Error: python3 not found or not in PATH. Please install Python 3 and ensure it is added to PATH."

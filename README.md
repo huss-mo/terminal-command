@@ -2,7 +2,7 @@
 
 # terminal-command (tc)
 
-> _The intuitive way to build complex shell commands_
+> _The intuitive way to build complex shell commands, with safety in mind_
 
 Instead of searching Stack Overflow or man pages for the right command syntax, `tc` uses AI to build complex terminal commands from plain English
 
@@ -34,7 +34,7 @@ For **Windows**, run:
 powershell -ExecutionPolicy Bypass -File _scripts/install.ps1
 ```
 
-Then, Set the API key for the LLM provider in config.yaml (Automatically copied from _templates during installation). 
+Then, set the API key for the LLM provider in config.yaml (Automatically copied from _templates during installation). 
 
 ## Usage
 
@@ -81,6 +81,7 @@ Make sure all tests pass before submitting your pull request.
 
 ### Contribution Guidelines
 - **Efficiency**: Ensure your contributions keep the execution efficient. For example, avoid introducing changes that significantly increase the runtime of the `tc` command.
+- **Safety**: Ensure that any changes or additions prioritize the safety of generated commands. Contributions should aim to prevent damage or unintended consequences by improving suspicious command detection or adding safeguards.
 - **Code Quality**: Follow Python best practices and maintain clean, readable code.
 - **Testing**: Add unit tests for any new features or changes.
 

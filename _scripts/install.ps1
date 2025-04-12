@@ -4,12 +4,25 @@
 
 Write-Host "Installing terminal-command (tc) on Windows..."
 
+$ScriptDir = Split-Path $MyInvocation.MyCommand.Definition -Parent
+$ProjectRoot = Join-Path $ScriptDir ".."
 $InstallDir = "C:\\Windows\\System32"  # default location
+$TargetFile = Join-Path $InstallDir "tc.cmd"
 
 # Check if the user has administrative privileges
 if (-not ([bool](Test-Path $InstallDir))) {
-    Write-Error "Error: InstallDir does not exist or is inaccessible. Please ensure you have administrative privileges."
+    Write-Error "Error: Installation directory does not exist or is inaccessible. Please ensure you have administrative privileges."
     exit 1
+}
+
+# Check if 'tc.cmd' already exists in the InstallDir
+if (Test-Path $TargetFile) {
+    Write-Host "A file named 'tc.cmd' already exists in the target directory ($TargetFile). This could be a previous version of this tool or another program entirely."
+    $Response = Read-Host "Do you want to replace the existing file and continue with the installation? [y/n]"
+    if ($Response -ne "y") {
+        Write-Host "Installation aborted. To proceed, please remove or rename the existing '$TargetFile' and run the installer again, or consider installing manually to a different location."
+        exit 1
+    }
 }
 
 # Check if Python is installed and in PATH
@@ -19,10 +32,7 @@ if (-not (Get-Command python3 -ErrorAction SilentlyContinue)) {
 }
 
 # Create virtual environment
-$ScriptDir = Split-Path $MyInvocation.MyCommand.Definition -Parent
-$ProjectRoot = Join-Path $ScriptDir ".."
 $EnvDir = Join-Path $ProjectRoot "env"
-
 if (-not (Test-Path $EnvDir)) {
     Write-Host "Creating virtual environment in $EnvDir..."
     python3 -m venv $EnvDir
@@ -46,10 +56,9 @@ $WrapperScript = @"
 # Create a temp file, set contents
 $TempFile = [IO.Path]::GetTempFileName() + ".cmd"
 Set-Content -Path $TempFile -Value $WrapperScript -Force
-# Make it executable
-# (On Windows, .cmd files don't usually need explicit chmod, but let's keep it consistent.)
+
 # Copy to InstallDir
-Copy-Item $TempFile -Destination (Join-Path $InstallDir "tc.cmd") -Force
+Copy-Item $TempFile -Destination $TargetFile -Force
 Remove-Item $TempFile -Force
 
 # Check if config.yaml exists in the project's root directory
