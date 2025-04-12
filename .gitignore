@@ -1,4 +1,5 @@
-*.psd
 *.pyc
+*.psd
+/_packages/*
 /config.yaml
 /env/*

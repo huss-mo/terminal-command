@@ -2,7 +2,7 @@
 
 # terminal-command (tc)
 
-> _Your everyday terminal command builder (powered by AI)_
+> _The intuitive way to build complex shell commands_
 
 Instead of searching Stack Overflow or man pages for the right command syntax, `tc` uses AI to build complex terminal commands from plain English
 
@@ -17,7 +17,7 @@ The project supports:
 
 ## Demo
 
-<img src="./_assets/example.gif" alt="tc command demonstration" width="760"> 
+<img src="./_assets/example.gif" alt="tc command demonstration" width="1080"> 
 
 ## Installation
 
