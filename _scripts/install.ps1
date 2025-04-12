@@ -6,7 +6,7 @@ Write-Host "Installing terminal-command (tc) on Windows..."
 
 $ScriptDir = Split-Path $MyInvocation.MyCommand.Definition -Parent
 $ProjectRoot = Join-Path $ScriptDir ".."
-$InstallDir = "C:\\Windows\\System32"  # default location
+$InstallDir = "C:\\Windows\\System32" # default location
 $TargetFile = Join-Path $InstallDir "tc.cmd"
 
 # Check if the user has administrative privileges
@@ -15,13 +15,18 @@ if (-not ([bool](Test-Path $InstallDir))) {
     exit 1
 }
 
-# Check if 'tc.cmd' already exists in the InstallDir
+# Check if a different 'tc.cmd' already exists in the InstallDir
+$Signature = "# TC_SIGNATURE_MARKER_e33cf818-5952-4c8d-8fc2-2daacaa7575d" # signature to identify the script when updating
 if (Test-Path $TargetFile) {
-    Write-Host "A file named 'tc.cmd' already exists in the target directory ($TargetFile). This could be a previous version of this tool or another program entirely."
-    $Response = Read-Host "Do you want to replace the existing file and continue with the installation? [y/n]"
-    if ($Response -ne "y") {
-        Write-Host "Installation aborted. To proceed, please remove or rename the existing '$TargetFile' and run the installer again, or consider installing manually to a different location."
-        exit 1
+    if (-not (Select-String -Path $TargetFile -Pattern $Signature -Quiet)) {
+        Write-Host "A file named 'tc.cmd' already exists in the target directory ($TargetFile)."
+        $Response = Read-Host "Do you want to replace the existing file and continue with the installation? [y/n]"
+        if ($Response -ne "y") {
+            Write-Host "Installation aborted. To proceed, please remove or rename the existing '$TargetFile' and run the installer again, or consider installing manually to a different location."
+            exit 1
+        }
+    } else {
+        Write-Host "A previous installation of 'tc' is found and will be replaced."
     }
 }
 
@@ -60,6 +65,7 @@ Set-Content -Path $TempFile -Value $WrapperScript -Force
 # Copy to InstallDir
 Copy-Item $TempFile -Destination $TargetFile -Force
 Remove-Item $TempFile -Force
+Add-Content -Path $TargetFile -Value $Signature
 
 # Check if config.yaml exists in the project's root directory
 $ConfigFile = Join-Path $ProjectRoot "config.yaml"

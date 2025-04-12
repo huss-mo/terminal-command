@@ -17,13 +17,18 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-# Check if 'tc' already exists in the INSTALL_DIR
+# Check if a different 'tc' already exists in the INSTALL_DIR
+SIGNATURE="# TC_SIGNATURE_MARKER_e33cf818-5952-4c8d-8fc2-2daacaa7575d" # signature to identify the script when updating
 if [ -f "${INSTALL_DIR}/tc" ]; then
-    echo "A file named 'tc' already exists in the target directory (${INSTALL_DIR}/tc). This could be a previous version of this tool or another program entirely."
-    read -p "Do you want to replace the existing file? [y/n] " response
-    if [ "${response}" != "y" ]; then
-        echo "Installation aborted. To proceed, please remove or rename the existing '${INSTALL_DIR}/tc' and run the installer again, or consider installing manually to a different location."
-        exit 1
+    if ! grep -q "${SIGNATURE}" "${INSTALL_DIR}/tc"; then
+        echo "A file named 'tc' already exists in the target directory (${INSTALL_DIR}/tc)."
+        read -p "Do you want to replace the existing file? [y/n] " response
+        if [ "${response}" != "y" ]; then
+            echo "Installation aborted. To proceed, please remove or rename the existing '${INSTALL_DIR}/tc' and run the installer again, or consider installing manually to a different location."
+            exit 1
+        fi
+    else
+        echo "A previous installation of 'tc' is found and will be replaced."
     fi
 fi
 
@@ -58,6 +63,7 @@ chmod 755 "${TMP_WRAPPER}"
 
 # Move the wrapper script to INSTALL_DIR
 sudo mv "${TMP_WRAPPER}" "${INSTALL_DIR}/tc"
+echo "${SIGNATURE}" >> "${INSTALL_DIR}/tc"
 
 # Check if config.yaml exists in the project's root directory
 CONFIG_FILE="${PROJECT_ROOT}/config.yaml"
