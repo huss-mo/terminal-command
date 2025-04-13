@@ -2,6 +2,10 @@
 
 # terminal-command (tc)
 
+![GitHub repo size](https://img.shields.io/github/repo-size/huss-mo/terminal-command)
+![GitHub language count](https://img.shields.io/github/languages/count/huss-mo/terminal-command)
+![GitHub top language](https://img.shields.io/github/languages/top/huss-mo/terminal-command)
+
 > _The intuitive way to build complex shell commands, with safety in mind_
 
 Instead of searching Stack Overflow or man pages for the right command syntax, `tc` uses AI to build shell commands from plain English
@@ -53,7 +57,7 @@ tc "list running docker containers" -e
 
 The `config.yaml` file allows you to configure:
 - **Default LLM Provider and Endpoints**: Configure the default provider (e.g., "openai" or "litellm"), API endpoints, and credentials.
-- **Prompt Template**: A template to guide the LLM in producing structured JSON output containing `command` and `explanation`.
+- **Prompt Template**: A template to guide the LLM in producing structured JSON output.
 - **Suspicious Command Detection**: 
   - A list of local suspicious substrings to quickly flag dangerous commands.
   - LLM-based detection settings, including the provider and a prompt template used to analyze command safety.

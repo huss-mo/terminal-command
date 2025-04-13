@@ -16,7 +16,7 @@ if (-not ([bool](Test-Path $InstallDir))) {
 }
 
 # Check if a different 'tc.cmd' already exists in the InstallDir
-$Signature = "# TC_SIGNATURE_MARKER_e33cf818-5952-4c8d-8fc2-2daacaa7575d" # signature to identify the script when updating
+$Signature = "REM TC_SIGNATURE_MARKER_e33cf818-5952-4c8d-8fc2-2daacaa7575d" # signature to identify the script when updating
 if (Test-Path $TargetFile) {
     if (-not (Select-String -Path $TargetFile -Pattern $Signature -Quiet)) {
         Write-Host "A file named 'tc.cmd' already exists in the target directory ($TargetFile)."
